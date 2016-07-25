@@ -1,6 +1,6 @@
 # OpenMDMServer
 
-基于Java（SpringMVC＋Hibernate ＋MySQL）的iOS移动设备管理。
+基于Java（SpringMVC＋Hibernate ＋MySQL）的iOS移动设备管理（MDM）。
 
 实现了如下功能：
 
