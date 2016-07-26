@@ -19,12 +19,12 @@
 
 三、演示站及技术支持：
 
-1、演示站：http://mdm.mbaike.net/ 注意：请用邮箱注册并生成账号和mobileconfig描述文件；
+1、演示站：http://mdm.mbaike.net/ 注意：请用邮箱注册并生成账号和mobileconfig描述文件
 
-2、GitHub开源地址：https://github.com/keaijohnee/OpenMDMServer；
+2、GitHub开源地址：https://github.com/keaijohnee/OpenMDMServer
 
-3、OSChina开源地址：http://git.oschina.net/jianggege/OpenMDMServer;
+3、OSChina开源地址：http://git.oschina.net/jianggege/OpenMDMServer
 
-4、技术参考：基于IOS上MDM技术相关资料整理及汇总（http://www.mbaike.net/mdm/6.html）；
+4、技术参考：基于IOS上MDM技术相关资料整理及汇总（http://www.mbaike.net/mdm/6.html）
 
-5、MDM咨询QQ：459104018 ，QQ群：205891305；
+5、MDM咨询QQ：459104018 ，QQ群：205891305
