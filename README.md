@@ -25,6 +25,6 @@
 
 3、OSChina开源地址：http://git.oschina.net/jianggege/OpenMDMServer
 
-4、技术参考：基于IOS上MDM技术相关资料整理及汇总（http://www.mbaike.net/mdm/6.html）
+4、技术参考：基于IOS上MDM技术相关资料整理及汇总:http://www.mbaike.net/mdm/6.html
 
 5、MDM咨询QQ：459104018 ，QQ群：205891305
