@@ -134,7 +134,9 @@ public class MdmUtils {
      * @return
      */
     public static Map<String, Map<String, String>> parseInstalledApplicationList(String pList){
-    	pList = pList.replace("<array/>","<array></array>").replaceAll("<true/>", "<string>true</string>").replaceAll("<false/>", "<string>false</string>");
+    	pList = pList.replace("<array/>","<array></array>").
+    			replaceAll("<true/>", "<string>true</string>").
+    			replaceAll("<false/>", "<string>false</string>");
         String strBlank  = replaceBlank(pList);
         /**(1)、组装APP列表数据**/
         String newBlank =  getList(ARRAY,strBlank).get(0);
@@ -153,8 +155,9 @@ public class MdmUtils {
             dictMapList.put(dictMap.get(Identifier),dictMap);
         }
         /**(2)、组装其他数据**/
-        String otherStr = strBlank.replace(newBlank,"").replace("<array>","").replace("</array>","").replace("<key>InstalledApplicationList</key>","");
-
+        String otherStr = strBlank.replace(newBlank,"").replace("<array>","").
+        		replace("</array>","").
+        		replace("<key>InstalledApplicationList</key>","");
         List<String> keyList = getList(KEY,otherStr);
         List<String> stringList = getList(STRING,otherStr);
         dictMap = new HashMap<String,String>();
@@ -437,6 +440,9 @@ public class MdmUtils {
      * @return
      */
     public static Map<String, String> parseAuthenticate(String pList){
+    	pList = pList.replace("<array/>","<array></array>").
+    			replaceAll("<true/>", "<string>true</string>").
+    			replaceAll("<false/>", "<string>false</string>");
         String strBlank = replaceBlank(pList);
         Map<String, String> plistMap = new HashMap<String, String>();
         /**获取key、string列表数据**/
@@ -456,7 +462,9 @@ public class MdmUtils {
      * @return
      */
     public static Map<String, String> parseTokenUpdate(String pList){
-    	System.out.println("pList:"+pList);
+    	pList = pList.replace("<array/>","<array></array>").
+    			replaceAll("<true/>", "<string>true</string>").
+    			replaceAll("<false/>", "<string>false</string>");
         String strBlank  = replaceBlank(pList);
         Map<String, String> plistMap = new HashMap<String, String>();
         /**获取key、string、data列表数据**/
@@ -483,29 +491,20 @@ public class MdmUtils {
      * @return
      */
     public static Map<String, String> parseProfileList(String pList){
-    	pList = pList.replaceAll("\\*", "");
-        Map<String, String> profileList = new HashMap<String, String>();
-        if(pList.contains("<array/>")){
-            String topStrBlank = pList.replaceAll("<key>ProfileList</key>", "");
-            topStrBlank = topStrBlank.replaceAll("<array/>", "");
-            /**获取key、string列表数据**/
-            List<String> topkeyList = getList(KEY,topStrBlank);
-            List<String> topstringList = getList(STRING,topStrBlank);
-            for(int i=0;i<topstringList.size();i++){
-            	profileList.put(topkeyList.get(i), topstringList.get(i));
-            }
-        }else{
-        	int dataStart = pList.indexOf("<array>", 0);
-            int dataEnd = pList.lastIndexOf("</array>")+8;
-            String newpList =  pList.substring(dataStart,dataEnd);
-            String topStrBlank = pList.replaceAll("<key>ProfileList</key>", "");
-            topStrBlank = topStrBlank.replaceAll(newpList, "");
-            /**获取key、string列表数据**/
-            List<String> topkeyList = getList(KEY,topStrBlank);
-            List<String> topstringList = getList(STRING,topStrBlank);
-            for(int i=0;i<topstringList.size();i++){
-            	profileList.put(topkeyList.get(i), topstringList.get(i));
-            }
+    	Map<String, String> profileList = new HashMap<String, String>();
+    	pList = pList.replace("<array/>","<array></array>").
+      			replaceAll("<true/>", "<string>true</string>").
+      			replaceAll("<false/>", "<string>false</string>").
+      			replaceAll("<array>", "").replaceAll("</array>", "").
+      			replaceAll("<dict>", "").replaceAll("</dict>", "").
+      			replaceAll("<data>", "<string>").replaceAll("</data>", "</string>").
+      			replaceAll("<key>ProfileList</key>", "").replaceAll("\\*", "");
+        String strBlank  = replaceBlank(pList);
+        /**获取key、string列表数据**/
+        List<String> topkeyList = getList(KEY,strBlank);
+        List<String> topstringList = getList(STRING,strBlank);
+        for(int i=0;i<topstringList.size();i++){
+        	profileList.put(topkeyList.get(i), topstringList.get(i));
         }
         return profileList;
     }
@@ -517,29 +516,20 @@ public class MdmUtils {
      */
     public static Map<String, String> parseProvisioningProfileList(String pList){
     	  Map<String, String> provisioningProfileList = new HashMap<String, String>();
-    	  pList = pList.replaceAll("\\*", "");
-    	  if(pList.contains("<array/>")){
-              String topStrBlank = pList.replaceAll("<key>ProvisioningProfileList</key>", "");
-              topStrBlank = topStrBlank.replaceAll("<array/>", "");
-              /**获取key、string列表数据**/
-              List<String> topkeyList = getList(KEY,topStrBlank);
-              List<String> topstringList = getList(STRING,topStrBlank);
-              for(int i=0;i<topstringList.size();i++){
-            	  provisioningProfileList.put(topkeyList.get(i), topstringList.get(i));
-              }
-    	  }else{
-    		  int dataStart = pList.indexOf("<array>", 0);
-              int dataEnd = pList.lastIndexOf("</array>")+8;
-              String newpList =  pList.substring(dataStart,dataEnd);
-              String topStrBlank = pList.replaceAll("<key>ProvisioningProfileList</key>", "");
-              topStrBlank = topStrBlank.replaceAll(newpList, "");
-              /**获取key、string列表数据**/
-              List<String> topkeyList = getList(KEY,topStrBlank);
-              List<String> topstringList = getList(STRING,topStrBlank);
-              for(int i=0;i<topstringList.size();i++){
-            	  provisioningProfileList.put(topkeyList.get(i), topstringList.get(i));
-              }
-    	  }
+    	  pList = pList.replace("<array/>","<array></array>").
+      			replaceAll("<true/>", "<string>true</string>").
+      			replaceAll("<false/>", "<string>false</string>").
+      			replaceAll("<array>", "").replaceAll("</array>", "").
+      			replaceAll("<dict>", "").replaceAll("</dict>", "").
+      			replaceAll("<data>", "<string>").replaceAll("</data>", "</string>").
+      			replaceAll("<key>ProvisioningProfileList</key>", "").replaceAll("\\*", "");
+    	  String strBlank  = replaceBlank(pList);
+          /**获取key、string列表数据**/
+          List<String> topkeyList = getList(KEY,strBlank);
+          List<String> topstringList = getList(STRING,strBlank);
+          for(int i=0;i<topstringList.size();i++){
+        	  provisioningProfileList.put(topkeyList.get(i), topstringList.get(i));
+          }
           return provisioningProfileList;
     }
     
@@ -549,30 +539,21 @@ public class MdmUtils {
      * @return
      */
     public static Map<String, String> parseCertificateList(String pList){
-    	pList = pList.replaceAll("\\*", "");
     	Map<String, String> certificateList = new HashMap<String, String>();
-    	if(pList.contains("<array/>")){
-            String topStrBlank = pList.replaceAll("<key>CertificateList</key>", "");
-            topStrBlank = topStrBlank.replaceAll("<array/>", "");
-            /**获取key、string列表数据**/
-            List<String> topkeyList = getList(KEY,topStrBlank);
-            List<String> topstringList = getList(STRING,topStrBlank);
-            for(int i=0;i<topstringList.size();i++){
-            	certificateList.put(topkeyList.get(i), topstringList.get(i));
-            }
-    	}else{
-    		int dataStart = pList.indexOf("<array>");
-            int dataEnd = pList.lastIndexOf("</array>")+8;
-            String newpList =  pList.substring(dataStart,dataEnd);
-            String topStrBlank = pList.replaceAll("<key>CertificateList</key>", "");
-            topStrBlank = topStrBlank.replaceAll(newpList, "");
-            /**获取key、string列表数据**/
-            List<String> topkeyList = getList(KEY,topStrBlank);
-            List<String> topstringList = getList(STRING,topStrBlank);
-            for(int i=0;i<topstringList.size();i++){
-            	certificateList.put(topkeyList.get(i), topstringList.get(i));
-            }
-    	}
+    	pList = pList.replaceAll("<array/>","<array></array>").
+    			replaceAll("<true/>", "<string>true</string>").
+    			replaceAll("<false/>", "<string>false</string>").
+    			replaceAll("<array>", "").replaceAll("</array>", "").
+    			replaceAll("<dict>", "").replaceAll("</dict>", "").
+    			replaceAll("<data>", "<string>").replaceAll("</data>", "</string>").
+    			replaceAll("<key>CertificateList</key>", "").replaceAll("\\*", "");
+    	String strBlank  = replaceBlank(pList);
+        /**获取key、string列表数据**/
+        List<String> topkeyList = getList(KEY,strBlank);
+        List<String> topstringList = getList(STRING,strBlank);
+        for(int i=0;i<topstringList.size();i++){
+        	certificateList.put(topkeyList.get(i), topstringList.get(i));
+        }
         return certificateList;
     }
     

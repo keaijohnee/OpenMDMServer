@@ -352,6 +352,7 @@ public class MdmController {
                 System.out.println("Device->Server DeviceInformation:\n"+info.toString());
                 Map<String, String> plistMap = MdmUtils.parseInformation(info);
                 String CommandUUID = plistMap.get("CommandUUID");
+                System.out.println("CommandUUID:"+CommandUUID);
                 Command command = commandService.getCommandById(CommandUUID);
                 if (command != null) {
                     command.setResult(MdmUtils.Acknowledged);
@@ -445,6 +446,9 @@ public class MdmController {
                 System.out.println("-------------------ProvisioningProfileList Start---------------");
                 System.out.println("Device->Server ProvisioningProfileList:\n"+info.toString());
                 Map<String, String> plistMap = MdmUtils.parseProvisioningProfileList(info);
+                for(String key:plistMap.keySet()){
+                	System.out.println(key+":"+plistMap.get(key));
+                }
             	String CommandUUID = plistMap.get("CommandUUID");
             	profileService.deleteProfileByDeviceId(deviceId,MdmUtils.ProvisioningProfileList);
             	Profile profile = new Profile();
@@ -452,6 +456,7 @@ public class MdmController {
             	profile.setDeviceId(deviceId);
             	profile.setResult(info.toString());
             	profileService.saveOrUpdate(profile);
+            	System.out.println("CommandUUID:"+CommandUUID);
                 Command command = commandService.getCommandById(CommandUUID);
                 if (command != null) {
                     command.setResult(MdmUtils.ProvisioningProfileList);
@@ -465,6 +470,9 @@ public class MdmController {
                 System.out.println("-------------------ProfileList Start---------------");
                 System.out.println("Device->Server ProfileList:\n"+info.toString());
                 Map<String, String> plistMap = MdmUtils.parseProfileList(info);
+                for(String key:plistMap.keySet()){
+                	System.out.println(key+":"+plistMap.get(key));
+                }
             	String CommandUUID = plistMap.get("CommandUUID");
             	profileService.deleteProfileByDeviceId(deviceId,MdmUtils.ProfileList);
             	Profile profile = new Profile();
@@ -472,6 +480,7 @@ public class MdmController {
             	profile.setDeviceId(deviceId);
             	profile.setResult(info.toString());
             	profileService.saveOrUpdate(profile);
+            	System.out.println("CommandUUID:"+CommandUUID);
                 Command command = commandService.getCommandById(CommandUUID);
                 if (command != null) {
                     command.setResult(MdmUtils.ProfileList);
@@ -485,6 +494,9 @@ public class MdmController {
                 System.out.println("-------------------CertificateList Start---------------");
                 System.out.println("Device->Server CertificateList:\n"+info.toString());
                 Map<String, String> plistMap = MdmUtils.parseCertificateList(info);
+                for(String key:plistMap.keySet()){
+                	System.out.println(key+":"+plistMap.get(key));
+                }
             	String CommandUUID = plistMap.get("CommandUUID");
             	profileService.deleteProfileByDeviceId(deviceId,MdmUtils.CertificateList);
             	Profile profile = new Profile();
@@ -492,6 +504,7 @@ public class MdmController {
             	profile.setDeviceId(deviceId);
             	profile.setResult(info.toString());
             	profileService.saveOrUpdate(profile);
+            	System.out.println("CommandUUID:"+CommandUUID);
                 Command command = commandService.getCommandById(CommandUUID);
                 if (command != null) {
                     command.setResult(MdmUtils.CertificateList);
@@ -505,7 +518,11 @@ public class MdmController {
                 System.out.println("-------------------OtherResult Start---------------");
                 System.out.println("Device->Server Others:\n"+info.toString());
                 Map<String, String> plistMap = MdmUtils.parseCommand(info);
+                for(String key:plistMap.keySet()){
+                	System.out.println(key+":"+plistMap.get(key));
+                }
                 String CommandUUID = plistMap.get("CommandUUID");
+                System.out.println("CommandUUID:"+CommandUUID);
                 Command command = commandService.getCommandById(CommandUUID);
                 if (command != null) {
                     command.setResult(MdmUtils.Acknowledged);
@@ -525,7 +542,11 @@ public class MdmController {
         } else if (info.contains(MdmUtils.CommandFormatError)) {
             System.out.println("-------------------CommandFormatError Start---------------");
             Map<String, String> plistMap = MdmUtils.parseCommand(info);
+            for(String key:plistMap.keySet()){
+            	System.out.println(key+":"+plistMap.get(key));
+            }
             String CommandUUID = plistMap.get("CommandUUID");
+            System.out.println("CommandUUID:"+CommandUUID);
             Command command = commandService.getCommandById(CommandUUID);
             if (command != null) {
                 command.setDoIt("3");
@@ -538,7 +559,11 @@ public class MdmController {
         } else if (info.contains(MdmUtils.Error)) {
             System.out.println("-------------------Error Start---------------");
             Map<String, String> plistMap = MdmUtils.parseCommand(info);
+            for(String key:plistMap.keySet()){
+            	System.out.println(key+":"+plistMap.get(key));
+            }
             String CommandUUID = plistMap.get("CommandUUID");
+            System.out.println("CommandUUID:"+CommandUUID);
             Command command = commandService.getCommandById(CommandUUID);
             if (command != null) {
                 command.setDoIt("3");
@@ -551,7 +576,11 @@ public class MdmController {
         } else if (info.contains(MdmUtils.NotNow)) {
             System.out.println("-------------------NotNow Start---------------");
             Map<String, String> plistMap = MdmUtils.parseCommand(info);
+            for(String key:plistMap.keySet()){
+            	System.out.println(key+":"+plistMap.get(key));
+            }
             String CommandUUID = plistMap.get("CommandUUID");
+            System.out.println("CommandUUID:"+CommandUUID);
             Command command = commandService.getCommandById(CommandUUID);
             if (command != null) {
                 command.setResult("NotNow");
