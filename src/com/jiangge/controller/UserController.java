@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jiangge.pojo.Admin;
 import com.jiangge.pojo.DeviceTemp;
 import com.jiangge.pojo.User;
 import com.jiangge.service.AdminService;
@@ -123,7 +124,7 @@ public class UserController {
 	 * 后台登陆
 	 */
 	@RequestMapping("/login")
-	public ModelAndView adminLogin(HttpServletRequest request,HttpServletResponse response) {
+	public ModelAndView login(HttpServletRequest request,HttpServletResponse response) {
 		ModelAndView mav = null;
 		String email = request.getParameter("email")==null?"":request.getParameter("email");
 		String password = request.getParameter("password")==null?"":request.getParameter("password");
@@ -136,6 +137,7 @@ public class UserController {
 				admin.setId(user.getId());
 				admin.setEmail(email);
 				admin.setPassword(dbpassword);
+				admin.setRole("USER");
 				admin.setRemark(user.getRemark());
 				request.getSession().setAttribute("sysadmin", admin);
 				mav = new ModelAndView("redirect:/sysadmin/main.do");  
@@ -146,6 +148,38 @@ public class UserController {
 		}else{
 			mav = new ModelAndView("login");  
 			mav.addObject("msg", "邮箱账号不存在,登录失败！");
+		}
+		return mav;  
+	}
+	
+	/**
+	 * 管理登陆
+	 */
+	@RequestMapping("/syslogin")
+	public ModelAndView adminLogin(HttpServletRequest request,HttpServletResponse response) {
+		ModelAndView mav = null;
+		String email = request.getParameter("email")==null?"":request.getParameter("email");
+		String password = request.getParameter("password")==null?"":request.getParameter("password");
+		String newpassword = StringUtil.MD5(password);
+		Admin user = adminService.getAdminByHql("from Admin where account = ?", email);
+		if(null != user){
+			String dbpassword = user.getPassword()==null?"":user.getPassword();
+			if(dbpassword.equals(newpassword)){
+				AdminVO admin = new AdminVO();
+				admin.setId(user.getId());
+				admin.setEmail(email);
+				admin.setPassword(dbpassword);
+				admin.setRemark(user.getRemark());
+				admin.setRole("ADMIN");
+				request.getSession().setAttribute("sysadmin", admin);
+				mav = new ModelAndView("redirect:/sysadmin/main.do");  
+			}else{
+				mav = new ModelAndView("login");  
+				mav.addObject("msg", "密码输入错误,登录失败！");
+			}
+		}else{
+			mav = new ModelAndView("login");  
+			mav.addObject("msg", "账号不存在,登录失败！");
 		}
 		return mav;  
 	}

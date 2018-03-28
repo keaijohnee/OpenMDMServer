@@ -29,7 +29,8 @@ public class MDMTasker {
 	            String oldCmd = "openssl smime -sign -in {0} -out {1} -signer {2} -inkey {3} -certfile {4} -outform der -nodetach";
 	            String newCmd = MessageFormat.format(oldCmd,oldPath,newPath,crtPath,keyPath,pemPath);
 	            System.out.println("OpenSSL：\n" + newCmd);
-	            Runtime.getRuntime().exec(newCmd);
+	            //Runtime.getRuntime().exec(newCmd);
+	            FileUtils.copyFile(oldPath, newPath);
 	            System.out.println("----------------------签名mobileconfig文件 end---------------------");
 	        }
 		} catch (Exception e) {

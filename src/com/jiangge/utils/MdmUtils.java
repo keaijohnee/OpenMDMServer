@@ -492,11 +492,14 @@ public class MdmUtils {
      */
     public static Map<String, String> parseProfileList(String pList){
     	Map<String, String> profileList = new HashMap<String, String>();
+    	pList = replaceBlank(pList);
     	pList = pList.replace("<array/>","<array></array>").
       			replaceAll("<true/>", "<string>true</string>").
       			replaceAll("<false/>", "<string>false</string>").
       			replaceAll("<array>", "").replaceAll("</array>", "").
+      			replaceAll("<integer>", "<string>").replaceAll("</integer>", "</string>").
       			replaceAll("<dict>", "").replaceAll("</dict>", "").
+      			replaceAll("</data><data>", "").
       			replaceAll("<data>", "<string>").replaceAll("</data>", "</string>").
       			replaceAll("<key>ProfileList</key>", "").replaceAll("\\*", "");
         String strBlank  = replaceBlank(pList);
@@ -516,11 +519,13 @@ public class MdmUtils {
      */
     public static Map<String, String> parseProvisioningProfileList(String pList){
     	  Map<String, String> provisioningProfileList = new HashMap<String, String>();
+    	  pList  = replaceBlank(pList);
     	  pList = pList.replace("<array/>","<array></array>").
       			replaceAll("<true/>", "<string>true</string>").
       			replaceAll("<false/>", "<string>false</string>").
       			replaceAll("<array>", "").replaceAll("</array>", "").
       			replaceAll("<dict>", "").replaceAll("</dict>", "").
+      			replaceAll("</data><data>", "").
       			replaceAll("<data>", "<string>").replaceAll("</data>", "</string>").
       			replaceAll("<key>ProvisioningProfileList</key>", "").replaceAll("\\*", "");
     	  String strBlank  = replaceBlank(pList);
@@ -540,11 +545,13 @@ public class MdmUtils {
      */
     public static Map<String, String> parseCertificateList(String pList){
     	Map<String, String> certificateList = new HashMap<String, String>();
+    	pList  = replaceBlank(pList);
     	pList = pList.replaceAll("<array/>","<array></array>").
     			replaceAll("<true/>", "<string>true</string>").
     			replaceAll("<false/>", "<string>false</string>").
     			replaceAll("<array>", "").replaceAll("</array>", "").
     			replaceAll("<dict>", "").replaceAll("</dict>", "").
+    			replaceAll("</data><data>", "").
     			replaceAll("<data>", "<string>").replaceAll("</data>", "</string>").
     			replaceAll("<key>CertificateList</key>", "").replaceAll("\\*", "");
     	String strBlank  = replaceBlank(pList);

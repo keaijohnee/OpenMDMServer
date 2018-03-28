@@ -1,7 +1,5 @@
 package com.jiangge.utils;
 
-import com.jiangge.utils.mail.EmailHandle;
-
 public class EmailUtil {
 
 	/**
@@ -18,7 +16,7 @@ public class EmailUtil {
 			String hostName = ReadPropertity.getProperty("emailsmtp");
 			String fromAddress = ReadPropertity.getProperty("emailaddress");
 			String fromAPass = ReadPropertity.getProperty("emailpass");
-			EmailHandle emailHandle = new EmailHandle(hostName);
+			MyEmailHandle emailHandle = new MyEmailHandle(hostName);
 			emailHandle.setFrom(fromAddress);
 			emailHandle.setNeedAuth(true);
 			emailHandle.setSubject(subject);
@@ -35,7 +33,7 @@ public class EmailUtil {
 
 	public static void main(String[] args) {
 		try {
-			EmailUtil.send("带附件的邮件测试", "lijiang@xfc123.com","测试内容<a href='http://www.crazyiter.com'>疯狂的IT人</a>");
+			EmailUtil.send("带附件的邮件测试1", "lijiang@xfc123.com","测试内容<a href='http://www.crazyiter.com'>疯狂的IT人</a>");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

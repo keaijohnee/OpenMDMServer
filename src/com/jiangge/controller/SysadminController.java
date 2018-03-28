@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jiangge.pojo.Admin;
 import com.jiangge.pojo.Apps;
 import com.jiangge.pojo.Command;
 import com.jiangge.pojo.Device;
@@ -111,11 +112,41 @@ public class SysadminController {
 	}
 	
 	/**
+	 * 密码修改
+	 */
+	@RequestMapping("/adminChangePwd")
+	@ResponseBody
+	public Map<String, String> adminChangePwd(HttpServletRequest request,HttpServletResponse response){
+		Map<String, String> map = new HashMap<String, String>();
+		String uid = request.getParameter("uid")==null?"":request.getParameter("uid");
+		String password = request.getParameter("password")==null?"":request.getParameter("password");
+		Admin admin = adminService.getAdminByHql("from Admin where id = ?", uid);
+		if(StringUtils.isNotEmpty(password)){
+			String newpassword = StringUtil.MD5(password);
+			admin.setPassword(newpassword);
+			adminService.saveOrUpdtae(admin);
+			map.put("msg", "密码修改成功!");
+		}else{
+			map.put("msg", "输入的新密码为空,密码未修改!");
+		}
+		return map;
+	}
+	
+	/**
 	 * 到密码修改页面
 	 */
 	@RequestMapping("/changePwdInput")
 	public ModelAndView changePwdInput(HttpServletRequest request,HttpServletResponse response){
 		ModelAndView mav = new ModelAndView("admin/pwdinput");  
+	    return mav;  
+	}
+	
+	/**
+	 * 到密码修改页面
+	 */
+	@RequestMapping("/adminChangePwdInput")
+	public ModelAndView adminChangePwdInput(HttpServletRequest request,HttpServletResponse response){
+		ModelAndView mav = new ModelAndView("admin/adminpwdinput");  
 	    return mav;  
 	}
 	
@@ -159,6 +190,21 @@ public class SysadminController {
 		device.setDeviceFlag(deviceFlag);
 		deviceService.saveOrUpdate(device);
 		ModelAndView mav = new ModelAndView("redirect:/sysadmin/deviceList.do");  
+	    return mav;  
+	}
+	
+	/**
+	 * 更改设备标签
+	 */
+	@RequestMapping("/allUpdateFlag")
+	public ModelAndView allUpdateFlag(HttpServletRequest request,HttpServletResponse response){
+		String hql = "from Device where deviceId = ?";
+		String deviceId = request.getParameter("deviceId")==null?"":request.getParameter("deviceId");
+		String deviceFlag = request.getParameter("deviceFlag")==null?"":request.getParameter("deviceFlag");
+		Device device = deviceService.getDeviceByHql(hql, deviceId);
+		device.setDeviceFlag(deviceFlag);
+		deviceService.saveOrUpdate(device);
+		ModelAndView mav = new ModelAndView("redirect:/sysadmin/allDeviceList.do");  
 	    return mav;  
 	}
 	
@@ -228,6 +274,35 @@ public class SysadminController {
 	}
 	
 	/**
+	 * 所有设备数据列表
+	 */
+	@RequestMapping("/allDeviceList")
+	public ModelAndView allDeviceList(HttpServletRequest request,HttpServletResponse response){
+		ModelAndView mav = null;
+		AdminVO admin = (AdminVO)request.getSession().getAttribute("sysadmin");
+		if(null != admin){
+			String hql = "from Device where 1=1 order by createTime desc";
+			int pageIndex = request.getParameter("pageIndex")==null?1:Integer.parseInt(request.getParameter("pageIndex"));
+			int pageSize = request.getParameter("pageSize")==null?10:Integer.parseInt(request.getParameter("pageSize"));
+			List<Device> list = deviceService.pageQuery(hql, pageIndex, pageSize);
+			int count = deviceService.getCount("select count(A.id) as number from Device A  where 1=1 ");
+			int totalPageNum = (int) (count / pageSize);
+			if (count % pageSize != 0) {
+				totalPageNum++;
+			}
+			Map<String,String> deviceStateMap = DeviceStateEnum.getAllType();
+			PageBean pageList = new PageBean(pageIndex,totalPageNum,count,list);
+			mav = new ModelAndView("device/alllist");  
+			mav.addObject("pageList", pageList);
+			mav.addObject("deviceStateMap", deviceStateMap);
+		}else{
+			mav = new ModelAndView("login");  
+			mav.addObject("msg", "登录过期，请重新登录");
+		}
+	    return mav;  
+	}
+	
+	/**
 	 * 命令日志列表
 	 */
 	@RequestMapping("/logList")
@@ -268,6 +343,57 @@ public class SysadminController {
 			Map<String,String> doTypeMap = DoTypeEnum.getAllType();
 			PageBean pageList = new PageBean(pageIndex,totalPageNum,count,newList);
 			mav = new ModelAndView("log/list");  
+			mav.addObject("pageList", pageList);
+			mav.addObject("commandTypeMap", commandTypeMap);
+			mav.addObject("doTypeMap", doTypeMap);
+		}else{
+			mav = new ModelAndView("login");  
+			mav.addObject("msg", "登录过期，请重新登录");
+		}
+	    return mav;  
+	}
+	
+	/**
+	 * 命令日志列表
+	 */
+	@RequestMapping("/allLogList")
+	public ModelAndView allLogList(HttpServletRequest request,HttpServletResponse response){
+		ModelAndView mav = null;
+		AdminVO admin = (AdminVO)request.getSession().getAttribute("sysadmin");
+		if(null != admin){
+			String hql = "from Command A where 1=1 order by createTime desc";
+			int pageIndex = request.getParameter("pageIndex")==null?1:Integer.parseInt(request.getParameter("pageIndex"));
+			int pageSize = request.getParameter("pageSize")==null?10:Integer.parseInt(request.getParameter("pageSize"));
+			List<Command> list = commandService.pageQuery(hql, pageIndex, pageSize);
+			List<CommandVO> newList = new ArrayList<CommandVO>(); 
+			CommandVO vo = null;
+			for(Command command : list){
+				if(null != command){
+					String result = command.getResult()==null?"":command.getResult();
+					result = result.replace("<", "&lt;");
+					result = result.replace(">", "&gt;");
+					result = "<pre style='font-family:\"微软雅黑\"'>" + result + "</pre>";
+					command.setResult(result);
+				}
+				vo = new CommandVO(command);
+				String deviceId = command.getDeviceId();
+				Device device = deviceService.getDeviceByHql("from Device where deviceId = ?", deviceId);
+				if(null != device){
+					vo.setDeviceFlag(device.getDeviceFlag());
+				}else{
+					vo.setDeviceFlag("未知");
+				}
+				newList.add(vo);
+			}
+			int count = commandService.getCount("select count(A.id) as number from Command A where 1=1 ");
+			int totalPageNum = (int) (count / pageSize);
+			if (count % pageSize != 0) {
+				totalPageNum++;
+			}
+			Map<String,String> commandTypeMap = CommandTypeEnum.getAllType();
+			Map<String,String> doTypeMap = DoTypeEnum.getAllType();
+			PageBean pageList = new PageBean(pageIndex,totalPageNum,count,newList);
+			mav = new ModelAndView("log/alllist");  
 			mav.addObject("pageList", pageList);
 			mav.addObject("commandTypeMap", commandTypeMap);
 			mav.addObject("doTypeMap", doTypeMap);

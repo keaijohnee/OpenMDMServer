@@ -394,7 +394,7 @@ public class MdmController {
                     for (String key : plistMap.keySet()) {
                         if(!MdmUtils.InstalledApplicationList.equals(key)){
                             Map<String, String> map =  plistMap.get(key);
-                            app = appsService.getAppsByHql("from Apps where deviceId = ? and identifier = ?", deviceId, map.get("Identifier"));
+                            app = appsService.getAppsByHql("from apps where deviceId = ? and identifier = ?", deviceId, map.get("Identifier"));
                             if(null != app){
                             	app.setManagedAppsOnly("1");
                                 appsService.saveOrUpdtae(app);
